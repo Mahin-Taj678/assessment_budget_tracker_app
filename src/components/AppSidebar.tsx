@@ -11,8 +11,11 @@ import {
   Sun,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react';
 import { useBudgetStore } from '@/store/budgetStore';
+import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
 
 export type Page = 'dashboard' | 'add' | 'history' | 'insights' | 'savings' | 'game';
 
@@ -57,11 +60,10 @@ export default function AppSidebar({ currentPage, onNavigate }: Props) {
                 onNavigate(item.id);
                 setMobileOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                active
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${active
                   ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
-              }`}
+                }`}
             >
               <item.icon className="w-4 h-4" />
               {item.label}
@@ -70,8 +72,8 @@ export default function AppSidebar({ currentPage, onNavigate }: Props) {
         })}
       </nav>
 
-      {/* Dark mode toggle */}
-      <div className="p-4 border-t border-border">
+      {/* Settings & Logout */}
+      <div className="p-4 border-t border-border space-y-2">
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={toggleDarkMode}
@@ -79,6 +81,14 @@ export default function AppSidebar({ currentPage, onNavigate }: Props) {
         >
           {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           {darkMode ? 'Light Mode' : 'Dark Mode'}
+        </motion.button>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => signOut(auth)}
+          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
+          Log Out
         </motion.button>
       </div>
     </div>
@@ -145,11 +155,10 @@ export default function AppSidebar({ currentPage, onNavigate }: Props) {
               key={item.id}
               whileTap={{ scale: 0.85 }}
               onClick={() => onNavigate(item.id)}
-              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-[10px] font-medium transition-colors ${
-                active
+              className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-[10px] font-medium transition-colors ${active
                   ? 'text-primary'
                   : 'text-muted-foreground'
-              }`}
+                }`}
             >
               <item.icon className={`w-5 h-5 ${active ? 'text-primary' : ''}`} />
               <span className="truncate max-w-[3.5rem]">{item.label.split(' ')[0]}</span>
@@ -159,9 +168,8 @@ export default function AppSidebar({ currentPage, onNavigate }: Props) {
         <motion.button
           whileTap={{ scale: 0.85 }}
           onClick={() => onNavigate('game')}
-          className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-[10px] font-medium transition-colors ${
-            currentPage === 'game' ? 'text-primary' : 'text-muted-foreground'
-          }`}
+          className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl text-[10px] font-medium transition-colors ${currentPage === 'game' ? 'text-primary' : 'text-muted-foreground'
+            }`}
         >
           <Gamepad2 className={`w-5 h-5 ${currentPage === 'game' ? 'text-primary' : ''}`} />
           <span>Game</span>
